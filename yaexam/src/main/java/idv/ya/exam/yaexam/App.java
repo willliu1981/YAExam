@@ -1,6 +1,7 @@
 package idv.ya.exam.yaexam;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,7 +27,8 @@ public class App {
 		// 一、A、3
 		System.out.print("\t 3:");
 		System.out.println("static: 類別的靜態成員,且只有一個值;");
-		System.out.println("\t   final: 用在變數,該變數不可改變;用在方法,\n\t   該方法不可被覆寫;用在類別,該類別不可被繼承\n");
+		System.out.println("\t   final: 用在變數,該變數不可改變;用在方法,\n\t   "
+				+ "該方法不可被覆寫;用在類別,該類別不可被繼承\n");
 
 		// 一、B、1
 		System.out.println("一、B、1:");
@@ -47,7 +49,7 @@ public class App {
 		}
 
 		// 二、DB
-		Connection conn = SqliteConnection.getConn();
+		Connection conn = getConn();
 		Statement statement = null;
 		ResultSet queryResult = null;
 		String sql = null;
@@ -80,8 +82,7 @@ public class App {
 
 		// 二、三
 		System.out.println("\n二、三:");
-		sql = "select stdnt.s_no, stdnt.s_name, sub.s_no, sum(sub.score) " 
-				+ "from student as stdnt, subject as sub "
+		sql = "select stdnt.s_no, stdnt.s_name, sub.s_no, sum(sub.score) " + "from student as stdnt, subject as sub "
 				+ "where stdnt.s_no=sub.s_no group by stdnt.s_name";
 		statement = conn.createStatement();
 		queryResult = statement.executeQuery(sql);
@@ -91,5 +92,17 @@ public class App {
 			System.out.printf("name=%s, sum score=%d\n", name, score);
 		}
 
+	}
+
+	static public Connection getConn() {
+		String url = "jdbc:sqlite:c:/java/yoexam/school.db";
+		Connection conn = null;
+		try {
+			conn = DriverManager.getConnection(url);
+			// System.out.println("Connection successful");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return conn;
 	}
 }
